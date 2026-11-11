@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}My Subjects - Student{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/dashboard.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <h2 class="dashboard-title">My Subjects</h2>
+
+    {% if subjects %}
+    <section class="subjects-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Name</th>
+                    <th>Schedule</th>
+                    <th>Teacher</th>    
+                </tr>
+            </thead>
+            <tbody>
+                {% for subject in subjects %}
+                <tr class="status-{{ subject.record.status|lower }}">
+                    <td>{{ subject.code }}</td>
+                    <td>{{ subject.name }}</td>
+                    <td>{{ subject.schedule_day }} {{ subject.schedule_start_time|time:"g:i A" }} - {{ subject.schedule_end_time|time:"g:i A" }}</td>
+                    <td>{{ subject.teacher.full_name }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    {% else %}
+    <p class="no-data">You are not enrolled in any subjects yet.</p>
+    {% endif %}
+
+    <a href="{% url 'dashboard' %}" class="btn">Back to Dashboard</a>
+
+</div>
+{% endblock %}

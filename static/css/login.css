@@ -1,0 +1,84 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: url('https://oica.upd.edu.ph/wp-content/uploads/2022/05/header-public-art-and-buildings.png') no-repeat center center/cover;
+}
+
+.login-container {
+    background-color: #fffefe;
+    padding: 35px 40px;
+    border-radius: 20px; /* Smoother rounded corners */
+    box-shadow: 1px rgba(0, 0, 0, 0.1); /* Slightly bigger shadow for more depth */
+    max-width: 400px;
+    width: 100vh;
+    margin-top: -80px; /* Slightly move up for better centering */
+}
+
+.login-container:hover{
+    box-shadow: 0px 10px 35px rgb(153, 98, 53);
+    transition: 0.1s ease 0.1s;
+}
+
+.login-container h2 {   
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px; /* Slightly increased margin for spacing */
+    font-weight: 600;
+    color: #444;
+    font-size: 1rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 16px;
+    border: 2px solid #ddd;
+    border-radius: 10px; /* Slightly more rounded borders */
+    box-sizing: border-box;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+    border-color:#6c3d16;
+    ; /* Change border color on focus */
+    box-shadow: 0 0 5px rgba(156, 95, 29, 0.3); /* Subtle blue glow on focus */
+    outline: none; /* Remove the default outline */
+}
+
+button.btn {
+    background-color: #6c3d16;
+    color: white;
+    font-weight: 1000;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 8px; /* Match rounded corners with inputs */
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Added transition for scale effect */
+}
+
+button.btn:hover {
+    opacity: 0.5;
+    transform: scale(1.05); /* Subtle scaling on hover */
+}
+
+button.btn:active {
+    transform: scale(1); /* Reset scale on click */
+}

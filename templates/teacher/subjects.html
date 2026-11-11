@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}My Subjects - Student Attendance Monitoring System{% endblock %}
+
+{% block extra_css %}
+<style>
+    .warning-message {
+        background-color: #fff3cd;
+        color: #856404;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        border: 1px solid #ffeeba;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h2>My Subjects</h2>
+
+{% if current_day %}
+<div style="margin-bottom: 15px;">
+    <p><strong>Today is:</strong> {{ current_day }}</p>
+</div>
+{% endif %}
+
+{% if messages %}
+<div class="warning-message">
+    {% for message in messages %}
+        <p style="margin: 0;"><strong>Note:</strong> {{ message }}</p>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if subjects %}
+    <table>
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Schedule Day</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Students</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for subject in subjects %}
+            <tr>
+                <td>{{ subject.code }}</td>
+                <td>{{ subject.name }}</td>
+                <td>{{ subject.schedule_day }}</td>
+                <td>{{ subject.schedule_start_time|time:"g:i A" }}</td>
+                <td>{{ subject.schedule_end_time|time:"g:i A" }}</td>
+                <td>{{ subject.students.count }}</td>
+                <td>
+                    <a href="{% url 'subject_students' subject.id %}" class="btn" style="margin: 2px;">View Students</a>
+                    <a href="{% url 'start_attendance' subject.id %}" class="btn btn-success" style="margin: 2px;">Start Attendance</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>You don't have any subjects assigned yet.</p>
+{% endif %}
+
+<div style="margin-top: 20px;">
+    <a href="{% url 'dashboard' %}" class="btn">Back to Dashboard</a>
+</div>
+{% endblock %} 

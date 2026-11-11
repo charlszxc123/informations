@@ -1,0 +1,19 @@
+/* Footer styles */
+.footer {
+    text-align: center;
+    margin-top: 40px;
+    padding: 20px;
+    border-top: 1px solid var(--medium-gray);
+    color: var(--dark-gray);
+}
+
+/* Header styles */
+.system-title h1 {
+    margin: 0;
+    padding: 50px;
+    font-size: 2.2rem;
+}
+
+.user-info .btn {
+    margin-left: 10px;
+} 

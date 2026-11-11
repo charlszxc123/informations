@@ -1,0 +1,183 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}Student Attendance Monitoring System{% endblock %}</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="{% static 'css/base.css' %}? v=3">
+  <link rel="stylesheet" href="{% static 'css/layout.css' %}? v=1">
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background:url('https://i0.wp.com/up.edu.ph/wp-content/uploads/2024/10/OblePlaza-Sunset-Jun.png?fit=1200%2C630&ssl=1') no-repeat center center/cover;
+    }
+
+    .menu-bar {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background-color: #6c3d16;
+      overflow-x: hidden;
+      transition: 0.3s;
+      padding-top: 100px;
+      z-index: 1000;
+    }
+
+    .system-title img {
+    width: 100%;
+    height: 100%;
+    }
+
+    .menu-bar a {
+      padding: 15px 30px;
+      text-decoration: none;
+      font-size: 18px;
+      color: white;
+      display: block;
+      transition: 0.3s;
+    }
+
+    .menu-bar a:hover {
+      background-color: #575757;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 15px;
+      right: 25px;
+      font-size: 30px;
+      color: white;
+      text-decoration: none;
+    }
+
+    .open-btn {
+      font-size: 20px;
+      cursor: pointer;
+      background-color: transparent;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 999;
+      border-radius: 5px;
+    }
+
+    .open-btn:hover {
+      background-color: #6c3d16;
+    }
+
+    main.container.main-container {
+      margin-top: 80px;
+    }
+
+    img {
+        width: 100%;
+        height: 30%;
+    }
+  </style>
+
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+  <!-- Sidebar Menu -->
+  <div id="menu-bar" class="menu-bar">
+    <a href="javascript:void(0)" class="close-btn" onclick="closeMenu()">
+        <i class="fa-solid fa-xmark"></i></a>
+
+    <!-- Styled User Info Block -->
+    <div style="display: flex; align-items: center; padding: 0 30px 20px 30px; gap: 10px; color: white;">
+      <img src="https://static.vecteezy.com/system/resources/previews/005/005/788/non_2x/user-icon-in-trendy-flat-style-isolated-on-grey-background-user-symbol-for-your-web-site-design-logo-app-ui-illustration-eps10-free-vector.jpg" 
+           alt="User" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+      <div style="font-size: 16px;">
+        Welcome:<br>
+        <strong>
+          {% if user.is_superuser %}
+            Admin
+          {% elif user.teacher %}
+            {{ user.teacher.full_name }}
+          {% elif user.student %}
+            {{ user.student.full_name }}
+          {% else %}
+            {{ user.username }}
+          {% endif %}
+        </strong>
+      </div>
+    </div>
+
+    <!-- Navigation Links -->
+    {% if user.is_authenticated %}
+      {% if user.is_superuser %}
+        <a href="{% url 'dashboard' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a href="{% url 'manage_teachers' %}"><i class="fas fa-chalkboard-teacher"></i> Teachers</a>
+        <a href="{% url 'manage_students' %}"><i class="fas fa-user-graduate"></i> Students</a>
+        <a href="{% url 'manage_subjects' %}"><i class="fas fa-book"></i> Subjects</a>
+        <a href="{% url 'change_admin_password' %}"><i class="fas fa-lock"></i> Change Password</a>
+        <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      {% elif user.teacher %}
+        <a href="{% url 'teacher_subjects' %}"><i class="fas fa-book-open"></i> My Subjects</a>
+        <a href="{% url 'view_attendance_report' %}"><i class="fas fa-chart-line"></i> View Reports</a>
+        <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      {% elif user.student %}
+        <a href="{% url 'dashboard' %}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a href="{% url 'my_attendance_history' %}"><i class="fas fa-calendar-check"></i> My Attendance</a>
+        <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      {% endif %}
+    {% endif %}
+
+    <img style="margin-left: 50px; margin-top: 40px;height: 150px; width: 150px;" src="https://upload.wikimedia.org/wikipedia/en/thumb/9/97/Santa_Monica_College_seal.svg/800px-Santa_Monica_College_seal.svg.png" alt="">
+  </div>
+
+
+  <button style="box-shadow: 0px 1px 12px rgba(255, 255, 255, 1.0);" class="open-btn" onclick="openMenu()"><i class="fa-sharp fa-solid fa-bars"></i></button>
+
+  <header>
+    <div class="container">
+      <div class="system-title">
+        <img style="position: absolute; top: 10px; left: 150px; height: 100px; width: 100px;" src="https://upload.wikimedia.org/wikipedia/en/thumb/9/97/Santa_Monica_College_seal.svg/800px-Santa_Monica_College_seal.svg.png" alt="">
+        <h1 style="font-size: 50px; margin-left: 10px;">Santa Monica College</h1>
+      </div>
+    </div>
+  </header>
+
+  <main class="container main-container">
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    <section class="content-card">
+      {% block content %}{% endblock %}
+    </section>
+  </main>
+
+  <script>
+    function openMenu() {
+      document.getElementById("menu-bar").style.width = "250px";
+    }
+
+    function closeMenu() {
+      document.getElementById("menu-bar").style.width = "0";
+    }
+  </script>
+
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

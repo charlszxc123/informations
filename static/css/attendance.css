@@ -1,0 +1,69 @@
+.status-present {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-late {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.status-absent {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.warning-flash {
+    animation: warningFlash 1s;
+}
+
+@keyframes warningFlash {
+    0% { background-color: #fff3cd; }
+    50% { background-color: #ffdf7e; }
+    100% { background-color: #fff3cd; }
+}
+
+#rfid-input {
+    width: 100%;
+    padding: 10px;
+    font-size: 1.2rem;
+    border: 2px solid #3498db;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+#attendance-log {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+}
+
+.log-entry {
+    margin-bottom: 5px;
+    padding: 5px;
+    border-bottom: 1px dashed #ddd;
+}
+
+.log-warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-radius: 3px;
+    padding: 3px 5px;
+}
+
+.scan-box {
+    margin: 20px 0;
+    padding: 20px;
+    border: 2px solid #3498db;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+}
+
+.attendance-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+} 

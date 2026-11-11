@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} - Student Attendance Monitoring System{% endblock %}
+
+{% block content %}
+<h2 class="form-title">{{ title }}</h2>
+
+<form method="post" class="form-container">
+    {% csrf_token %}
+
+    <!-- Student ID -->
+    <div class="form-group">
+        <label for="{{ form.student_id.id_for_label }}">Student ID</label>
+        {{ form.student_id }}
+        {% if form.student_id.errors %}
+            <div class="error-message">{{ form.student_id.errors }}</div>
+        {% endif %}
+        <small class="form-note">This will be used as the student's username for login.</small>
+    </div>
+
+    <!-- Full Name -->
+    <div class="form-group">
+        <label for="{{ form.full_name.id_for_label }}">Full Name</label>
+        {{ form.full_name }}
+        {% if form.full_name.errors %}
+            <div class="error-message">{{ form.full_name.errors }}</div>
+        {% endif %}
+    </div>
+
+    <!-- Email -->
+    <div class="form-group">
+        <label for="{{ form.email.id_for_label }}">Email</label>
+        {{ form.email }}
+        {% if form.email.errors %}
+            <div class="error-message">{{ form.email.errors }}</div>
+        {% endif %}
+    </div>
+
+    <!-- RFID Card -->
+    <div class="form-group">
+        <label for="{{ form.rfid_card.id_for_label }}">RFID Card</label>
+        {{ form.rfid_card }}
+        {% if form.rfid_card.errors %}
+            <div class="error-message">{{ form.rfid_card.errors }}</div>
+        {% endif %}
+        <small class="form-note">The unique identifier of the student's RFID card.</small>
+    </div>
+
+    <!-- Password -->
+    <div class="form-group">
+        <label for="{{ form.password.id_for_label }}">Password</label>
+        {{ form.password }}
+        {% if form.password.errors %}
+            <div class="error-message">{{ form.password.errors }}</div>
+        {% endif %}
+        <small class="form-note">
+            {% if form.instance.pk %}
+                Leave this blank to keep the current password.
+            {% else %}
+                By default, this should be the same as the Student ID.
+            {% endif %}
+        </small>
+    </div>
+
+    <!-- Form Buttons -->
+    <div class="form-buttons">
+        <a href="{% url 'manage_students' %}" style="font-weight: 600;" class="btn btn-cancel">Cancel</a>
+        <button style="font-weight: 600; padding: 12px; width: 80px; font-size: 15px;" type="submit" class="btn btn-submit">Save</button>
+    </div>
+</form>
+{% endblock %}

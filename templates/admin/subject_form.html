@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} - Student Attendance Monitoring System{% endblock %}
+
+{% block content %}
+<h2>{{ title }}</h2>
+
+<form method="post">
+    {% csrf_token %}
+    
+    <div class="form-group">
+        <label for="{{ form.code.id_for_label }}">Subject Code:</label>
+        {{ form.code }}
+        {% if form.code.errors %}
+        <div style="color: red; margin-top: 5px;">
+            {{ form.code.errors }}
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="form-group">
+        <label for="{{ form.name.id_for_label }}">Subject Name:</label>
+        {{ form.name }}
+        {% if form.name.errors %}
+        <div style="color: red; margin-top: 5px;">
+            {{ form.name.errors }}
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="form-group">
+        <label for="{{ form.teacher.id_for_label }}">Teacher:</label>
+        {{ form.teacher }}
+        {% if form.teacher.errors %}
+        <div style="color: red; margin-top: 5px;">
+            {{ form.teacher.errors }}
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="form-group">
+        <label for="{{ form.schedule_day.id_for_label }}">Schedule Day:</label>
+        {{ form.schedule_day }}
+        {% if form.schedule_day.errors %}
+        <div style="color: red; margin-top: 5px;">
+            {{ form.schedule_day.errors }}
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="form-group">
+        <label for="{{ form.schedule_start_time.id_for_label }}">Start Time:</label>
+        {{ form.schedule_start_time }}
+        {% if form.schedule_start_time.errors %}
+        <div style="color: red; margin-top: 5px;">
+            {{ form.schedule_start_time.errors }}
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="form-group">
+        <label for="{{ form.schedule_end_time.id_for_label }}">End Time:</label>
+        {{ form.schedule_end_time }}
+        {% if form.schedule_end_time.errors %}
+        <div style="color: red; margin-top: 5px;">
+            {{ form.schedule_end_time.errors }}
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="form-group">
+        <label for="{{ form.students.id_for_label }}">Students:</label>
+        <div style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; margin-top: 5px;">
+            {{ form.students }}
+        </div>
+        {% if form.students.errors %}
+        <div style="color: red; margin-top: 5px;">
+            {{ form.students.errors }}
+        </div>
+        {% endif %}
+    </div>
+    
+    <div style="margin-top: 20px; display: flex; justify-content: space-between;">
+        <a href="{% url 'manage_subjects' %}" class="btn">Cancel</a>
+        <button type="submit" class="btn btn-success">Save</button>
+    </div>
+</form>
+{% endblock %} 

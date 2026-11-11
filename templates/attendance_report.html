@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Attendance Report - Student Attendance Monitoring System{% endblock %}
+
+{% block content %}
+<h2>Attendance Report</h2>
+
+<form method="post">
+    {% csrf_token %}
+    
+    <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 20px;">
+        <div style="flex: 1; min-width: 200px;">
+            <div class="form-group">
+                <label for="{{ form.date.id_for_label }}">Date:</label>
+                {{ form.date }}
+            </div>
+        </div>
+        
+        <div style="flex: 1; min-width: 200px;">
+            <div class="form-group">
+                <label for="{{ subject_form.subject.id_for_label }}">Subject:</label>
+                {{ subject_form.subject }}
+            </div>
+        </div>
+        
+        <div style="display: flex; align-items: flex-end;">
+            <button type="submit" class="btn">Generate Report</button>
+        </div>
+    </div>
+</form>
+
+{% if attendance_records %}
+    <div style="margin-top: 20px;">
+        <h3>
+            Attendance for 
+            {% if selected_date %}{{ selected_date }}{% endif %}
+            {% if selected_subject %} - {{ selected_subject.name }}{% endif %}
+        </h3>
+        
+        <table>
+            <thead>
+                <tr>
+                    {% if user_type == 'admin' or user_type == 'teacher' %}
+                    <th>Student ID</th>
+                    <th>Student Name</th>
+                    {% endif %}
+                    
+                    {% if not selected_subject %}
+                    <th>Subject</th>
+                    {% endif %}
+                    
+                    <th>Status</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in attendance_records %}
+                <tr class="status-{{ record.status|lower }}">
+                    {% if user_type == 'admin' or user_type == 'teacher' %}
+                    <td>{{ record.student.student_id }}</td>
+                    <td>{{ record.student.full_name }}</td>
+                    {% endif %}
+                    
+                    {% if not selected_subject %}
+                    <td>{{ record.subject.name }}</td>
+                    {% endif %}
+                    
+                    <td>{{ record.status }}</td>
+                    <td>{% if record.time %}{{ record.time }}{% else %}N/A{% endif %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    {% if request.method == 'POST' %}
+    <p>No attendance records found for the selected criteria.</p>
+    {% endif %}
+{% endif %}
+
+<div style="margin-top: 20px;">
+    <a href="{% url 'dashboard' %}" class="btn">Back</a>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .status-present {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    
+    .status-late {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+    
+    .status-absent {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+</style>
+{% endblock %} 

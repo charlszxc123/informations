@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Attendance - Student Attendance Monitoring System{% endblock %}
+
+{% block extra_css %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/attendance.css' %}">
+{% endblock %}
+
+{% block content %}
+<h2>Attendance</h2>
+<h3>{{ subject.name }} ({{ subject.code }})</h3>
+<p>Date: {{ session.date }}</p>
+<p>Session started at: {{ session.start_time }}</p>
+
+<div class="scan-box">
+    <h4>Scan your ID</h4>
+    <p>Place the student's card near the reader</p>
+    
+    <input type="text" id="rfid-input" placeholder="RFID Card ID" autofocus>
+    
+    <div id="attendance-log">
+        <div class="log-entry"><strong>Attendance Log:</strong></div>
+    </div>
+</div>
+
+<h4>Attendance Records</h4>
+{% if attendance_records %}
+    <table id="attendance-table">
+        <thead>
+            <tr>
+                <th>Student ID</th>
+                <th>Full Name</th>
+                <th>Time</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in attendance_records %}
+            <tr id="student-{{ record.student.student_id }}" class="status-{{ record.status|lower }}">
+                <td>{{ record.student.student_id }}</td>
+                <td>{{ record.student.full_name }}</td>
+                <td>{% if record.time %}{{ record.time }}{% else %}N/A{% endif %}</td>
+                <td>{{ record.status }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No attendance records found.</p>
+{% endif %}
+
+<div class="attendance-actions">
+    <a href="{% url 'teacher_subjects' %}" class="btn">Back to Subjects</a>
+    
+    {% if session.is_active %}
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" name="end_session" class="btn btn-danger" onclick="return confirm('Are you sure you want to end this attendance session?')">End Attendance Session</button>
+    </form>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const rfidInput = document.getElementById('rfid-input');
+        const attendanceLog = document.getElementById('attendance-log');
+        
+        rfidInput.focus();
+        
+        rfidInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                
+                const rfidCard = rfidInput.value.trim();
+                if (rfidCard === '') return;
+                
+                // Create form data to submit
+                const formData = new FormData();
+                formData.append('rfid_card', rfidCard);
+                formData.append('session_id', '{{ session.id }}');
+                formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+                
+                // Send AJAX request
+                fetch('{% url "record_attendance" %}', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Add log entry
+                    const logEntry = document.createElement('div');
+                    logEntry.className = 'log-entry';
+                    
+                    if (data.status === 'success') {
+                        logEntry.innerHTML = `<strong>${data.student_name}</strong> (${data.student_id}) - ${data.attendance_status} at ${data.time}`;
+                        
+                        // Update the table row if it exists
+                        const row = document.getElementById(`student-${data.student_id}`);
+                        if (row) {
+                            row.className = `status-${data.attendance_status.toLowerCase()}`;
+                            row.cells[2].textContent = data.time;
+                            row.cells[3].textContent = data.attendance_status;
+                        }
+                    } else if (data.status === 'warning') {
+                        // Handle duplicate scan warning
+                        logEntry.innerHTML = `<span class="log-warning"><strong>${data.student_name}</strong> (${data.student_id}) - Already marked ${data.attendance_status} at ${data.time}</span>`;
+                        
+                        // Highlight the existing row to show it was scanned again
+                        const row = document.getElementById(`student-${data.student_id}`);
+                        if (row) {
+                            // Flash the row to indicate duplicate scan
+                            row.classList.add('warning-flash');
+                            setTimeout(() => {
+                                row.classList.remove('warning-flash');
+                            }, 1000); // Remove animation class after 1 second
+                        }
+                    } else {
+                        logEntry.innerHTML = `<span style="color: red;">${data.message}</span>`;
+                    }
+                    
+                    attendanceLog.appendChild(logEntry);
+                    attendanceLog.scrollTop = attendanceLog.scrollHeight;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    const logEntry = document.createElement('div');
+                    logEntry.className = 'log-entry';
+                    logEntry.innerHTML = `<span style="color: red;">Error processing request</span>`;
+                    attendanceLog.appendChild(logEntry);
+                });
+                
+                // Clear the input field
+                rfidInput.value = '';
+            }
+        });
+    });
+</script>
+{% endblock %} 

@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}Student Attendance History - Student Attendance Monitoring System{% endblock %}
+
+{% block content %}
+<h2>Attendance History {{ student.full_name }}</h2>
+<p>Student ID: {{ student.student_id }}</p>
+
+<form method="post">
+    {% csrf_token %}
+    
+    <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 20px;">
+        <div style="flex: 1; min-width: 200px;">
+            <div class="form-group">
+                <label for="{{ form.date.id_for_label }}">Date (optional):</label>
+                {{ form.date }}
+            </div>
+        </div>
+
+        <div style="flex: 1; min-width: 200px;">
+            <div class="form-group">
+                <label for="{{ subject_form.subject.id_for_label }}">Subject (optional):</label>
+                {{ subject_form.subject }}
+            </div>
+        </div>
+        
+        <div style="display: flex; align-items: flex-end;">
+            <button type="submit" class="btn">Filter</button>
+        </div>
+    </div>
+</form>
+
+{% if attendance_records %}
+    <div style="margin-top: 20px;">
+        <h3>
+            Attendance Records
+            {% if selected_date %} for {{ selected_date }}{% endif %}
+            {% if selected_subject %} in {{ selected_subject.name }}{% endif %}
+        </h3>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Subject</th>
+                    <th>Status</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in attendance_records %}
+                <tr class="status-{{ record.status|lower }}">
+                    <td>{{ record.date }}</td>
+                    <td>{{ record.subject.name }}</td>
+                    <td>{{ record.status }}</td>
+                    <td>{% if record.time %}{{ record.time }}{% else %}N/A{% endif %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <p>No attendance records found.</p>
+{% endif %}
+
+<div style="margin-top: 20px;">
+    {% if user_type == 'admin' %}
+    <a href="{% url 'manage_students' %}" class="btn">Back to Students</a>
+    {% elif user_type == 'teacher' %}
+    <a href="{% url 'teacher_subjects' %}" class="btn">Back to Subjects</a>
+    {% else %}
+    <a href="{% url 'dashboard' %}" class="btn">Back to Dashboard</a>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .status-present {
+        background-color: #d4edda;
+        color: #155724;
+    }
+    
+    .status-late {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+    
+    .status-absent {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+</style>
+{% endblock %} 

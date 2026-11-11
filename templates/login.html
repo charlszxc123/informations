@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Login - Student Attendance Monitoring System{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/login.css' %}? v=4">
+  
+</head>
+<body>
+    <div class="login-container">
+        <img style="margin-left: -15px; height: 100px; width: 100px;" src="https://upload.wikimedia.org/wikipedia/en/thumb/9/97/Santa_Monica_College_seal.svg/800px-Santa_Monica_College_seal.svg.png" alt="">
+        <h2 style="position: absolute; top: 180px; left: 750px; font-weight: 1000; font-size: 27px;">Santa Monica College</h2>
+        <div class="border_form">
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label style="padding-top: 20px;" for="{{ form.username.id_for_label }}">Username:</label>
+                    {{ form.username }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.password.id_for_label }}">Password:</label>
+                    {{ form.password }}
+                </div>
+                
+                <div style="text-align: center; margin-top: 20px;">
+                    <button type="submit" class="btn btn-success">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+  
+</body>
+</html>
